@@ -1,0 +1,26 @@
+function startVoting(candidate) {
+    const section = prompt("Enter your section (A-Z):").toUpperCase();
+    const rollNumber = prompt("Enter your roll number (1-99):");
+
+    if (!section.match(/^[A-Z]$/) || !rollNumber.match(/^[1-9][0-9]?$/)) {
+        alert("Invalid section or roll number. Please try again.");
+        return;
+    }
+
+    const voterId = `231FA04${section}${rollNumber.padStart(2, '0')}`;
+    const candidateId = getCandidateId(candidate);
+
+    fetch('http://localhost:5000/vote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ voter_id: voterId, candidate_id: candidateId })
+    })
+    .then(response => response.text())
+    .then(message => alert(message))
+    .catch(error => console.error('Error:', error));
+}
+
+function getCandidateId(candidateName) {
+    const candidates = { "A Vivek": 1, "B Harshit": 2, "C Priya": 3, "D Nithin": 4 };
+    return candidates[candidateName];
+}
